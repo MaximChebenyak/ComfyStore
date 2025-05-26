@@ -1,7 +1,7 @@
 import { formatPrice } from '../utils';
 import { Link, useLoaderData } from 'react-router-dom';
 
-const ProductList = () => {
+const ProductsList = () => {
   const { products } = useLoaderData();
   return (
     <div className="mt-12 grid gap-y-8">
@@ -39,4 +39,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ProductsList;
