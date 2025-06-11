@@ -23,14 +23,14 @@ const SingleProduct = () => {
   };
 
   const cartProduct = {
-    cartid: product.id + productColor,
-    productId: product.id,
+    cartID: product.id + productColor,
+    productID: product.id,
     image,
     title,
     price,
     company,
     productColor,
-    description,
+    amount,
   };
 
   const dispatch = useDispatch();
