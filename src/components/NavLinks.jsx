@@ -1,3 +1,6 @@
+import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 const links = [
   { id: 1, url: '/', text: 'home' },
   { id: 2, url: 'about', text: 'about' },
@@ -7,22 +10,19 @@ const links = [
   { id: 6, url: 'orders', text: 'orders' },
 ];
 
-import { NavLink } from 'react-router-dom';
 // import { links } from '../utils/constants';
 
 const NavLinks = () => {
+  const user = useSelector((state) => state.userState.user);
+
   return (
     <>
       {links.map((link) => {
         const { id, url, text } = link;
+        if ((url === 'checkout' || url === 'orders') && !user) return null;
         return (
           <li key={id}>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? 'capitalize text-primary' : 'capitalize'
-              }
-              to={url}
-            >
+            <NavLink className="capitalize" to={url}>
               {text}
             </NavLink>
           </li>
