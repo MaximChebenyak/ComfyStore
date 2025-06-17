@@ -7,8 +7,25 @@ import {
   SectionTitle,
 } from '../components';
 
+export const ordersQuery = (params, user) => {
+  return {
+    queryKey: [
+      'orders',
+      user.username,
+      params.page ? parseInt(params.page) : 1,
+    ],
+    queryFn: () =>
+      customFetch.get('/orders', {
+        params,
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }),
+  };
+};
+
 export const loader =
-  (store) =>
+  (store, queryClient) =>
   async ({ request }) => {
     const user = store.getState().userState.user;
 
@@ -20,14 +37,14 @@ export const loader =
       ...new URL(request.url).searchParams.entries(),
     ]);
     try {
-      const response = await customFetch.get('/orders', {
-        params,
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await queryClient.ensureQueryData(
+        ordersQuery(params, user)
+      );
 
-      return { orders: response.data.data, meta: response.data.meta };
+      return {
+        orders: response.data.data,
+        meta: response.data.meta,
+      };
     } catch (error) {
       console.log(error);
       const errorMessage =
@@ -35,9 +52,7 @@ export const loader =
         'there was an error accessing your orders';
 
       toast.error(errorMessage);
-      if (error?.response?.status === 401 || error?.response?.status === 403)
-        return redirect('/login');
-
+      if (error?.response?.status === 401 || 403) return redirect('/login');
       return null;
     }
   };

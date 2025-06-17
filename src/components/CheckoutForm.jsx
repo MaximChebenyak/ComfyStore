@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { clearCart } from '../features/cart/cartSlice';
 
 export const action =
-  (store) =>
+  (store, queryClient) =>
   async ({ request }) => {
     const formData = await request.formData();
     const { name, address } = Object.fromEntries(formData);
@@ -32,6 +32,7 @@ export const action =
           },
         }
       );
+      queryClient.removeQueries(['orders']);
       store.dispatch(clearCart());
       toast.success('order placed successfully');
       return redirect('/orders');
@@ -50,7 +51,7 @@ export const action =
 const CheckoutForm = () => {
   return (
     <Form method="POST" className="flex flex-col gap-y-4">
-      <h4 className="font-medium text-xl">Shipping Information</h4>
+      <h4 className="font-medium text-xl ">Shipping Information</h4>
       <FormInput label="first name" name="name" type="text" />
       <FormInput label="address" name="address" type="text" />
       <div className="mt-4">
